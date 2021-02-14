@@ -1,0 +1,14 @@
+/3d Printer (from old computer setup)
+/3d prints pics
+/cnc
+/netfabb Basic
+/video
+
+# do not upload marlin to git, but do include the configuration files that I changed. I currently use Marlin version 2.0.1
+marlin/**
+!marlin/*/
+!Configuration.h
+!Configuration_adv.h
+
+# Ignore solidworks temporary files
+~$*

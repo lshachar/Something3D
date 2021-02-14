@@ -1,0 +1,20 @@
+maybe important:
+copy avrdude.conf to same folder as avrdude.exe
+seems to work: release reset while pressing return on that command.
+
+avrdude -p atmega2560 -P com18 -c stk500v2 -b115200 -F -U flash:r:something3d_firmware.hex:i
+avrdude -p atmega2560 -P com18 -c stk500v2 -b115200 -F -U eeeprom:r:something3d_eeprom.hex:i
+
+to write:
+avrdude -p atmega2560 -P com18 -c stk500v2 -b115200 -F -D -U flash:w:firmware.hex:i
+avrdude -p atmega2560 -P com18 -c stk500v2 -b115200 -F -D -U eeeprom:w:something3d_eeprom.hex:i
+
+(-did not try writing yet.)
+
+
+for arduino uno (atmega328p) seems like this should work:
+avrdude -p m328P -P com10 -c avrispmkII -b 115200 -F -U eeprom:r:test_eeprom.hex:i
+but it doesn't. maybe because it's a chinese clone. maybe the bootloader is ld (avrispmkII not suitable? but it works from the arduino ide!)
+
+
+avrdude -p atmega2560 -P com17 -c stk500v2 -b115200 -F -D -U flash:w:something3d_firmware.hex:i
