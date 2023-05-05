@@ -60,6 +60,7 @@ Xsteps/mm: +053.20  ** new: 53.5
 Ysteps/mm: +053.20  ** new: 53.5
 Zsteps/mm: +1632.0  ** new: 1600
 Esteps/mm: +0095.6  ** new: 92.73 for 1st (new) extruder, unknown for 2nd
+updated Esteps to 94.18 on 4.5.23.
 
 _____________
 A few links that helped me:
@@ -136,3 +137,46 @@ M25 ; pause sd print
 G0 x0
 
 
+
+
+5.5.23, current m503:
+SENDING:M503
+echo:  G21    ; Units in mm (mm)
+echo:  M149 C ; Units in Celsius
+echo:Filament settings: Disabled
+echo:  M200 D1.75
+echo:  M200 T1 D1.75
+echo:  M200 D0
+echo:Steps per unit:
+echo: M92 X53.50 Y53.50 Z1600.00 E94.18
+echo:Maximum feedrates (units/s):
+echo:  M203 X500.00 Y500.00 Z5.00 E500.00
+echo:Maximum Acceleration (units/s2):
+echo:  M201 X500.00 Y500.00 Z100.00 E10000.00
+echo:Acceleration (units/s2): P<print_accel> R<retract_accel> T<travel_accel>
+echo:  M204 P500.00 R2000.00 T3000.00
+echo:Advanced: B<min_segment_time_us> S<min_feedrate> T<min_travel_feedrate> J<junc_dev>
+echo:  M205 B20000.00 S0.00 T0.00 J0.01
+echo:Home offset:
+echo:  M206 X0.00 Y0.00 Z0.00
+echo:Hotend offsets:
+echo:  M218 T1 X33.30 Y0.00 Z0.000
+echo:Unified Bed Leveling:
+echo:  M420 S1 Z10.00
+Unified Bed Leveling System v1.01 active
+Active Mesh Slot: 1
+EEPROM can hold 7 meshes.
+echo:Material heatup parameters:
+echo:  M145 S0 H195 B60 F0
+echo:  M145 S1 H235 B105 F0
+echo:PID settings:
+echo:  M301 P161.35 I24.63 D264.29 F0.00
+echo:  M301 P107.71 I13.55 D213.98 F0.00
+echo:  M304 P73.68 I7.56 D478.84
+echo:Z-Probe Offset (mm):
+echo:  M851 X-44.00 Y-4.00 Z7.50
+echo:Linear Advance:
+echo:  M900 T0 K0.12
+  M900 T1 K0.00
+echo:Tool-changing:
+echo: Z2.00

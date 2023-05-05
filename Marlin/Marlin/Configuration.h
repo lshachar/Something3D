@@ -490,11 +490,19 @@
   //#define DEFAULT_Ki 2.25
   //#define DEFAULT_Kd 440
   
-  //FU3d
-  #define DEFAULT_Kp 107.71 // new one is from autotune PID. from old firmware: 058.91
-  #define DEFAULT_Ki 13.55  // new one is from autotune PID. from old firmware: 004.96
-  #define DEFAULT_Kd 213.98 // new one is from autotune PID. from old firmware: 174.70
-
+  //FU3d 
+  //#define DEFAULT_Kp 77.24 //  DEFAULT_Kp 107.71 // new one is from autotune PID. from old firmware: 058.91
+  //#define DEFAULT_Ki 6.73 // DEFAULT_Ki 13.55  // new one is from autotune PID. from old firmware: 004.96
+  //#define DEFAULT_Kd 221.46 // DEFAULT_Kd 213.98 // new one is from autotune PID. from old firmware: 174.70
+  
+  // 4.5.23 first time running autotune with fan on at 60% (=m106 s153). higher Ki, I like it.
+  // (saved with: m301 h2 p161.35 i24.63 d264.29 <> m500)
+  #define DEFAULT_Kp 161.35
+  #define DEFAULT_Ki 24.63
+  #define DEFAULT_Kd 264.29
+  
+  
+  
 #endif // PIDTEMP
 
 //===========================================================================
@@ -550,7 +558,7 @@
   //Something3D - my settings. great unless you have a desire to change temperatures while printing. Which I don't have.
   #define DEFAULT_bedKp 100.00
   #define DEFAULT_bedKi 7.5		// this is all that is important really. uncomment #PID_BED_DEBUG and you'll see.
-  #define DEFAULT_bedKd 0	// say no to Kd! what's the point in a steady-state system?! 
+  #define DEFAULT_bedKd 0		// say no to Kd! what's the point in a steady-state system?! 
 
 
   // FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
@@ -734,14 +742,14 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 53.5, 53.5, 1600.0, 92.73 }  // { 53.2, 53.2, 1632.0, 95.6 }	//{ 80, 80, 4000, 500 }	// I changed the extruder E steps, read in something3d notes.txt file. 29.1.21
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 53.5, 53.5, 1600.0, 94.18}  // { 53.2, 53.2, 1632.0, 95.6 from default something3d }	// I changed the extruder E steps, read in something3d notes.txt file. 29.1.21
 
 /**
  * Default Max Feed Rate (mm/s)
  * Override with M203
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 500, 500, 5, 250}	//{ 500, 500, 5, 25 } Tried 10 for Z max feedrate, too much for printer!
+#define DEFAULT_MAX_FEEDRATE          { 500, 500, 5, 100}	// { 500, 500, 5, 25 } Tried 10 for Z max feedrate, too much for printer!
 
 #define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -754,11 +762,11 @@
  * Override with M201
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 10000 }  // { 900, 900, 5, 10000 }		// { 3000, 3000, 100, 10000 } are the defaults. extruder value was 10000. I changed it to 2000. 30.1. trying the default again. seems great
+#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 10000 }  // { 3000, 3000, 100, 10000 } are the defaults.
 
 #define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
-  #define MAX_ACCEL_EDIT_VALUES       { 6000, 6000, 200, 20000 }  // { 18000, 18000, 15, 20000 } // { 6000, 6000, 200, 20000 } are the defaults ...or, set your own edit limits
+  #define MAX_ACCEL_EDIT_VALUES       { 6000, 6000, 200, 20000 }  // { 6000, 6000, 200, 20000 } are the defaults ...or, set your own edit limits
 #endif
 
 /**
@@ -769,9 +777,9 @@
  *   M204 R    Retract Acceleration
  *   M204 T    Travel Acceleration
  */
-#define DEFAULT_ACCELERATION          3000 // 2000 // 3000 I changed following an online post. went back to 3000 on 30.1. thinking time spent not printing causing an under extrusion issue.   // X, Y, Z and E acceleration for printing moves. 
-#define DEFAULT_RETRACT_ACCELERATION  3000 // 2000 // 3000 I changed following an online post   // E acceleration for retracts
-#define DEFAULT_TRAVEL_ACCELERATION   3000 // 2000 // 3000 I changed following an online post   // X, Y, Z acceleration for travel (non printing) moves
+#define DEFAULT_ACCELERATION          500 // 2000 // 3000   // Slowing down to 500 acc - better corners? // X, Y, Z and E acceleration for printing moves. 
+#define DEFAULT_RETRACT_ACCELERATION  2000 // 3000 // don't go to crazy at 3000? // E acceleration for retracts
+#define DEFAULT_TRAVEL_ACCELERATION   3000 // 3000 // rapid move, no need to slow down. // X, Y, Z acceleration for travel (non printing) moves
 
 /**
  * Default Jerk limits (mm/s)
@@ -944,7 +952,7 @@
  *
  * Specify a Probe position as { X, Y, Z }
  */
-#define NOZZLE_TO_PROBE_OFFSET {-44,-4,-7.5}  // if sensor is installed to the right of printhead (x+ y+ direction):{77,4,-6.15} // The example in this file is correct, distance is nozzle to probe, not opposite like the link says. // changed {44+33.3 = 77} // https://3dprinting.stackexchange.com/questions/8153/how-to-set-z-probe-boundary-limits-in-firmware-when-using-automatic-bed-leveling
+#define NOZZLE_TO_PROBE_OFFSET {-44,-4,-6.4}  // I think it should be +6.4 instead of -6.4.  {-44,-4,-7.5}  // if sensor is installed to the right of printhead (x+ y+ direction):{77,4,-6.15} // The example in this file is correct, distance is nozzle to probe, not opposite like the link says. // changed {44+33.3 = 77} // https://3dprinting.stackexchange.com/questions/8153/how-to-set-z-probe-boundary-limits-in-firmware-when-using-automatic-bed-leveling
 
 // Certain types of probes need to stay away from edges
 #define MIN_PROBE_EDGE 0	// look at the comment by tatusah https://github.com/MarlinFirmware/Marlin/issues/15933
@@ -1075,7 +1083,7 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 270  // It can just go to 280 if the Z probe isn't there.
+#define X_BED_SIZE 260  // It can just go to 280 if the Z probe isn't there. (I broke the glass, so using 260 max)
 #define Y_BED_SIZE 290  // I don't know why I had 270, when it can really do 290. maybe from the time that I experimented with CNC milling? I don't think so.
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
@@ -1460,7 +1468,7 @@
 
 // Preheat Constants
 #define PREHEAT_1_LABEL       "PLA"
-#define PREHEAT_1_TEMP_HOTEND 195
+#define PREHEAT_1_TEMP_HOTEND 200
 #define PREHEAT_1_TEMP_BED     60
 #define PREHEAT_1_FAN_SPEED     0 // Value from 0 to 255
 
